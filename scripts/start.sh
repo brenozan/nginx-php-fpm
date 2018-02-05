@@ -98,7 +98,7 @@ else
  sed -i "s/expose_php = On/expose_php = Off/g" /usr/local/etc/php-fpm.conf
 fi
 
-if [[ -z "$GLOBAL_TIMEOUT"  ]] then
+if [[ -z "$GLOBAL_TIMEOUT"  ]] ; then
  sed -i "s/GLOBAL_TIMEOUT/${GLOBAL_TIMEOUT}s/" /etc/nginx/sites-available/default.conf
  sed -i "s/GLOBAL_TIMEOUT/${GLOBAL_TIMEOUT}s/" /etc/nginx/nginx.conf 
 else
