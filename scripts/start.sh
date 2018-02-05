@@ -98,6 +98,14 @@ else
  sed -i "s/expose_php = On/expose_php = Off/g" /usr/local/etc/php-fpm.conf
 fi
 
+if [[ -z "$GLOBAL_TIMEOUT"  ]] then
+ sed -i "s/GLOBAL_TIMEOUT/${GLOBAL_TIMEOUT}s/" /etc/nginx/sites-available/default.conf
+ sed -i "s/GLOBAL_TIMEOUT/${GLOBAL_TIMEOUT}s/" /etc/nginx/nginx.conf 
+else
+ sed -i "s/GLOBAL_TIMEOUT/60s/" /etc/nginx/sites-available/default.conf
+ sed -i "s/GLOBAL_TIMEOUT/60s/" /etc/nginx/nginx.conf 
+fi
+
 # Pass real-ip to logs when behind ELB, etc
 if [[ "$REAL_IP_HEADER" == "1" ]] ; then
  sed -i "s/#real_ip_header X-Forwarded-For;/real_ip_header X-Forwarded-For;/" /etc/nginx/sites-available/default.conf
@@ -121,6 +129,10 @@ fi
 if [ ! -z "$PHP_ERRORS_STDERR" ]; then
   echo "log_errors = On" >> /usr/local/etc/php/conf.d/docker-vars.ini
   echo "error_log = /dev/stderr" >> /usr/local/etc/php/conf.d/docker-vars.ini
+fi
+
+if [ ! -z "$GLOBAL_TIMEOUT" ]; then
+    echo "request_terminate_timeout = ${GLOBAL_TIMEOUT}" >> /usr/local/etc/php/conf.d/docker-vars.ini
 fi
 
 # Increase the memory_limit
